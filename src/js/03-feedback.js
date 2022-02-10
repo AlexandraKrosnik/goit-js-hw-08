@@ -1,5 +1,8 @@
 import throttle from 'lodash/throttle'
-let inputStorage = {};
+let inputStorage = {
+    email: "",
+    message:""
+};
 
 let ref = {
     form: document.querySelector(".feedback-form"),
@@ -14,9 +17,11 @@ window.onload = () => {
     if (isData)
     {
         let storageParse = JSON.parse(isData); 
-        inputStorage = { ...storageParse };
-        ref.email.value = storageParse.email;
-        ref.message.value = storageParse.message;
+        
+        inputStorage = { ...inputStorage, ...storageParse };
+        console.log(inputStorage);
+        ref.email.value = inputStorage.email;
+        ref.message.value = inputStorage.message;
         
     }
 }
@@ -32,8 +37,15 @@ function onInputSave(e) {
 
 function onFormSubmit(e) {
     e.preventDefault();
+    if (ref.email.value === "" || ref.message.value === "")
+    {
+        alert("Не всі поля зопавненні! Перевірте введені дані.");
+        return;
+    }   
+    
     ref.form.reset();
     localStorage.removeItem("feedback-form-state");
-    console.log(inputStorage);     
+    console.log(inputStorage);  
+    inputStorage = {};  
     
 }
